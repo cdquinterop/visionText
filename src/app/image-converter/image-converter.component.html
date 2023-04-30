@@ -1,1 +1,6 @@
-<p>image-converter works!</p>
+<form (submit)="onSubmit()">
+  <input type="file" (change)="onFileSelected($event)" />
+</form>
+<button (click)="onSubmit()">Enviar</button>
+<button (click)="downloadText()">Descargar texto</button>
+<!-- <form [formGroup]="form"></form> -->
