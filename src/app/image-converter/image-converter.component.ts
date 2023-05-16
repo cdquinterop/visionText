@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CloudVisionService } from '../services/cloud-vision.service';
 @Component({
   selector: 'app-image-converter',
   templateUrl: './image-converter.component.html',
@@ -7,38 +8,66 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ImageConverterComponent {
   selectedFile!: File;
+  selectedFileData!: string;
+  isDragging = false;
+  label = 'Arrastra y suelta o selecciona una imagen';
   data: any;
-  private Url = 'https://visiontextapi.fly.dev/vision/imagen';
 
-  constructor(private http: HttpClient) {}
+  constructor(private cloudVisionService: CloudVisionService) {}
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.selectedFile = input.files[0];
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+    this.readFile();
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.onDragLeave(event);
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.selectedFile = files[0];
+      this.readFile();
     }
   }
- // FUNCION PARA CONECTAR A LA API Y PROCESAR LA IMAGEN
-  onSubmit() {
-    const formData = new FormData();
-    formData.append('image', this.selectedFile);
 
-    this.http
-      .post<any>(this.Url, formData)
-      .subscribe(
-        (res) => {
-          this.data = res.text;
-          //TO DO
-          console.log(this.data);
-        },
-        (err) => {
-          //TO DO
-          console.log(err.error); // Aquí se muestra el mensaje de error
-        }
-      );
+  readFile() {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.selectedFileData = reader.result as string;
+    };
+    reader.readAsDataURL(this.selectedFile);
   }
-//FUNCION PARA DESCARGAR EL CONTENIDO DE LA IMAGEN PROCESADA
+
+  onSubmit() {
+    this.cloudVisionService.convertirImg(this.selectedFile).subscribe(
+      (res) => {
+        this.data = res.text;
+        // TO DO
+        console.log(this.data);
+      },
+      (err) => {
+        // TO DO
+        console.log(err.error); // Aquí se muestra el mensaje de error
+      }
+    );
+  }
+
   downloadText(): void {
+    console.log(this.data);
     if (this.data) {
       const text = this.data.replace(/\n/g, '\r\n'); // Reemplazar saltos de línea por retorno de carro + salto de línea
       const blob = new Blob([text], { type: 'text/plain' });
@@ -53,3 +82,6 @@ export class ImageConverterComponent {
     }
   }
 }
+//FUNCION PARA MOSTRAR TEXTO
+
+

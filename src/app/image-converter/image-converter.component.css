@@ -1,0 +1,67 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.file-upload {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+}
+
+.label.dragging {
+  border-color: blue;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.label .icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.label .text {
+  font-weight: bold;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.output {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.submit-btn,
+.download-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.submit-btn:hover,
+.download-btn:hover {
+  background-color: #0056b3;
+}
+
+.data {
+  margin-top: 10px;
+  font-size: 18px;
+}
