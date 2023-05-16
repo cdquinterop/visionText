@@ -1,6 +1,18 @@
-<form (submit)="onSubmit()">
-  <input type="file" (change)="onFileSelected($event)" />
-</form>
-<button (click)="onSubmit()">Enviar</button>
-<button (click)="downloadText()">Descargar texto</button>
-<!-- <form [formGroup]="form"></form> -->
+<div class="container">
+  <div class="file-upload" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+    <input type="file" id="fileInput" (change)="onFileSelected($event)">
+    <label for="fileInput" [class.dragging]="isDragging">
+      <span class="icon">➕</span>
+      <span class="text">{{ label }}</span>
+    </label>
+    <div *ngIf="selectedFile">
+      <img [src]="selectedFileData" alt="Vista previa">
+    </div>
+  </div>
+
+  <div class="output">
+    <button class="submit-btn" (click)="onSubmit()">Enviar</button>
+    <div class="data">{{ data }}</div>
+    <button class="download-btn" (click)="downloadText()">Descargar texto</button>
+  </div>
+</div>
